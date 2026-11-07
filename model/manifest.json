@@ -1,0 +1,626 @@
+{
+  "project": "TerraSpectraIQ",
+  "version": "1.0.0",
+  "created_utc": "2026-11-07T21:00:31+00:00",
+  "quick_mode": false,
+  "dataset": {
+    "name": "Statlog (Landsat Satellite)",
+    "uci_id": 146,
+    "doi": "https://doi.org/10.24432/C55887",
+    "url": "https://archive.ics.uci.edu/dataset/146/statlog+landsat+satellite",
+    "files": {
+      "train": {
+        "name": "sat.trn",
+        "sha256": "e896dc88a960fa2404160fc4c3cb3dc53fcf4afd80ba920bf2d261bd42d12613",
+        "rows": 4435
+      },
+      "test": {
+        "name": "sat.tst",
+        "sha256": "4b9167b8a92baafafed7c8809aef86d0683a5e685c19d98d119fa6974f0f2479",
+        "rows": 2000
+      }
+    }
+  },
+  "features": [
+    "r1c1_b1",
+    "r1c1_b2",
+    "r1c1_b3",
+    "r1c1_b4",
+    "r1c2_b1",
+    "r1c2_b2",
+    "r1c2_b3",
+    "r1c2_b4",
+    "r1c3_b1",
+    "r1c3_b2",
+    "r1c3_b3",
+    "r1c3_b4",
+    "r2c1_b1",
+    "r2c1_b2",
+    "r2c1_b3",
+    "r2c1_b4",
+    "r2c2_b1",
+    "r2c2_b2",
+    "r2c2_b3",
+    "r2c2_b4",
+    "r2c3_b1",
+    "r2c3_b2",
+    "r2c3_b3",
+    "r2c3_b4",
+    "r3c1_b1",
+    "r3c1_b2",
+    "r3c1_b3",
+    "r3c1_b4",
+    "r3c2_b1",
+    "r3c2_b2",
+    "r3c2_b3",
+    "r3c2_b4",
+    "r3c3_b1",
+    "r3c3_b2",
+    "r3c3_b3",
+    "r3c3_b4"
+  ],
+  "target": "land_cover_class",
+  "classes": {
+    "1": "Red soil",
+    "2": "Cotton crop",
+    "3": "Grey soil",
+    "4": "Damp grey soil",
+    "5": "Soil with vegetation stubble",
+    "7": "Very damp grey soil"
+  },
+  "protocol": {
+    "tuning": "GridSearchCV, StratifiedKFold(n_splits=5, shuffle=True) on sat.trn only",
+    "selection_metric": "macro F1 (cross-validated); tie-break MCC",
+    "final_fit": "selected configuration refitted once on all 4,435 sat.trn rows",
+    "final_evaluation": "single evaluation on the 2,000 sat.tst rows",
+    "auc": "one-vs-rest ROC-AUC from predict_proba, macro-averaged",
+    "averaging": "macro for precision, recall and F1",
+    "random_state": 146
+  },
+  "selection": {
+    "cv_winner": "svm",
+    "test_macro_f1_leader": "svm"
+  },
+  "ablation_centre_pixel": {
+    "logistic_regression": {
+      "centre_only_cv_f1_macro": 0.7772623493306188,
+      "all_36_cv_f1_macro": 0.8198257974592629
+    },
+    "decision_tree": {
+      "centre_only_cv_f1_macro": 0.8138648036027091,
+      "all_36_cv_f1_macro": 0.8347056957814291
+    },
+    "knn": {
+      "centre_only_cv_f1_macro": 0.804110433297868,
+      "all_36_cv_f1_macro": 0.8904304797865226
+    },
+    "naive_bayes": {
+      "centre_only_cv_f1_macro": 0.7688464899686883,
+      "all_36_cv_f1_macro": 0.7762281518963202
+    },
+    "svm": {
+      "centre_only_cv_f1_macro": 0.8195434774167734,
+      "all_36_cv_f1_macro": 0.9017250352825578
+    }
+  },
+  "environment": {
+    "python": "3.13.7",
+    "scikit_learn": "1.9.1",
+    "numpy": "2.5.4",
+    "pandas": "3.1.1"
+  },
+  "models": {
+    "logistic_regression": {
+      "display_name": "Logistic Regression",
+      "estimator": "LogisticRegression",
+      "preprocessing": "StandardScaler (fitted on training folds only)",
+      "rationale": "Multinomial softmax with L2 penalty; scaling makes the penalty treat all bands equally.",
+      "selected_params": {
+        "C": 10.0
+      },
+      "cv": {
+        "f1_macro_mean": 0.8198257974592629,
+        "f1_macro_std": 0.014740877642616577,
+        "accuracy_mean": 0.8633596392333709,
+        "mcc_mean": 0.8307711721924651,
+        "train_f1_macro_mean": 0.8440997256376777,
+        "n_candidates": 5,
+        "search_seconds": 2.88
+      },
+      "train_accuracy": 0.8784667418263811,
+      "test_metrics": {
+        "Accuracy": 0.838,
+        "AUC": 0.9750474815956077,
+        "Precision": 0.8100460413598372,
+        "Recall": 0.7967166776289165,
+        "F1": 0.7995781458243368,
+        "MCC": 0.8010989530463803
+      },
+      "per_class_test": [
+        {
+          "Code": 1,
+          "Class": "Red soil",
+          "Precision": 0.9718614718614719,
+          "Recall": 0.9739696312364425,
+          "F1": 0.9729144095341279,
+          "Support": 461
+        },
+        {
+          "Code": 2,
+          "Class": "Cotton crop",
+          "Precision": 0.9590909090909091,
+          "Recall": 0.9419642857142857,
+          "F1": 0.9504504504504504,
+          "Support": 224
+        },
+        {
+          "Code": 3,
+          "Class": "Grey soil",
+          "Precision": 0.852803738317757,
+          "Recall": 0.9193954659949622,
+          "F1": 0.8848484848484849,
+          "Support": 397
+        },
+        {
+          "Code": 4,
+          "Class": "Damp grey soil",
+          "Precision": 0.48201438848920863,
+          "Recall": 0.3175355450236967,
+          "F1": 0.38285714285714284,
+          "Support": 211
+        },
+        {
+          "Code": 5,
+          "Class": "Soil with vegetation stubble",
+          "Precision": 0.8440366972477065,
+          "Recall": 0.7763713080168776,
+          "F1": 0.8087912087912088,
+          "Support": 237
+        },
+        {
+          "Code": 7,
+          "Class": "Very damp grey soil",
+          "Precision": 0.7504690431519699,
+          "Recall": 0.851063829787234,
+          "F1": 0.7976071784646062,
+          "Support": 470
+        }
+      ],
+      "top_confusions": [
+        [
+          4,
+          7,
+          99
+        ],
+        [
+          4,
+          3,
+          40
+        ],
+        [
+          7,
+          4,
+          40
+        ]
+      ],
+      "fit_seconds": 0.07,
+      "predict_seconds_2000_rows": 0.002,
+      "artifact": {
+        "file": "logistic_regression.joblib",
+        "sha256": "2547b21064c996a870734ba99e6b99b96407d0888f2982a08b83941af2d9f036",
+        "bytes": 3679
+      }
+    },
+    "decision_tree": {
+      "display_name": "Decision Tree",
+      "estimator": "DecisionTreeClassifier",
+      "preprocessing": "None \u2014 splits are invariant to monotone rescaling",
+      "rationale": "Axis-aligned threshold rules on raw digital numbers; regularised by depth, leaf size and pruning.",
+      "selected_params": {
+        "ccp_alpha": 0.003,
+        "criterion": "entropy",
+        "max_depth": null,
+        "min_samples_leaf": 2
+      },
+      "cv": {
+        "f1_macro_mean": 0.8347056957814291,
+        "f1_macro_std": 0.0038121603392115566,
+        "accuracy_mean": 0.8638105975197294,
+        "mcc_mean": 0.8315943164373495,
+        "train_f1_macro_mean": 0.8964606984273068,
+        "n_candidates": 128,
+        "search_seconds": 5.0
+      },
+      "train_accuracy": 0.913641488162345,
+      "test_metrics": {
+        "Accuracy": 0.8545,
+        "AUC": 0.9593177778473224,
+        "Precision": 0.8358044947523818,
+        "Recall": 0.8260294808515276,
+        "F1": 0.8289203147348325,
+        "MCC": 0.8213693893158988
+      },
+      "per_class_test": [
+        {
+          "Code": 1,
+          "Class": "Red soil",
+          "Precision": 0.9432773109243697,
+          "Recall": 0.9739696312364425,
+          "F1": 0.9583778014941302,
+          "Support": 461
+        },
+        {
+          "Code": 2,
+          "Class": "Cotton crop",
+          "Precision": 0.920704845814978,
+          "Recall": 0.9330357142857143,
+          "F1": 0.926829268292683,
+          "Support": 224
+        },
+        {
+          "Code": 3,
+          "Class": "Grey soil",
+          "Precision": 0.8378378378378378,
+          "Recall": 0.9370277078085643,
+          "F1": 0.8846611177170036,
+          "Support": 397
+        },
+        {
+          "Code": 4,
+          "Class": "Damp grey soil",
+          "Precision": 0.6526946107784432,
+          "Recall": 0.5165876777251185,
+          "F1": 0.5767195767195767,
+          "Support": 211
+        },
+        {
+          "Code": 5,
+          "Class": "Soil with vegetation stubble",
+          "Precision": 0.8280542986425339,
+          "Recall": 0.7721518987341772,
+          "F1": 0.7991266375545851,
+          "Support": 237
+        },
+        {
+          "Code": 7,
+          "Class": "Very damp grey soil",
+          "Precision": 0.832258064516129,
+          "Recall": 0.823404255319149,
+          "F1": 0.827807486631016,
+          "Support": 470
+        }
+      ],
+      "top_confusions": [
+        [
+          4,
+          7,
+          49
+        ],
+        [
+          4,
+          3,
+          46
+        ],
+        [
+          7,
+          4,
+          41
+        ]
+      ],
+      "fit_seconds": 0.039,
+      "predict_seconds_2000_rows": 0.001,
+      "artifact": {
+        "file": "decision_tree.joblib",
+        "sha256": "ae2ca141e8d53fe1708e910bf4196456cf9158c42e85690403e619dbfea09178",
+        "bytes": 6452
+      }
+    },
+    "knn": {
+      "display_name": "KNN",
+      "estimator": "KNeighborsClassifier",
+      "preprocessing": "StandardScaler (distances otherwise dominated by high-variance bands)",
+      "rationale": "Instance-based vote among nearest spectral neighbourhoods.",
+      "selected_params": {
+        "n_neighbors": 5,
+        "p": 1,
+        "weights": "distance"
+      },
+      "cv": {
+        "f1_macro_mean": 0.8904304797865226,
+        "f1_macro_std": 0.006455435268694196,
+        "accuracy_mean": 0.9089064261555807,
+        "mcc_mean": 0.8873315898518179,
+        "train_f1_macro_mean": 1.0,
+        "n_candidates": 32,
+        "search_seconds": 6.44
+      },
+      "train_accuracy": 1.0,
+      "test_metrics": {
+        "Accuracy": 0.902,
+        "AUC": 0.9787307398000715,
+        "Precision": 0.8927293261020747,
+        "Recall": 0.8848672336313683,
+        "F1": 0.8885092705728624,
+        "MCC": 0.8795473352291199
+      },
+      "per_class_test": [
+        {
+          "Code": 1,
+          "Class": "Red soil",
+          "Precision": 0.976545842217484,
+          "Recall": 0.9934924078091106,
+          "F1": 0.9849462365591398,
+          "Support": 461
+        },
+        {
+          "Code": 2,
+          "Class": "Cotton crop",
+          "Precision": 0.9773755656108597,
+          "Recall": 0.9642857142857143,
+          "F1": 0.9707865168539326,
+          "Support": 224
+        },
+        {
+          "Code": 3,
+          "Class": "Grey soil",
+          "Precision": 0.8946078431372549,
+          "Recall": 0.9193954659949622,
+          "F1": 0.906832298136646,
+          "Support": 397
+        },
+        {
+          "Code": 4,
+          "Class": "Damp grey soil",
+          "Precision": 0.7114427860696517,
+          "Recall": 0.6777251184834123,
+          "F1": 0.6941747572815534,
+          "Support": 211
+        },
+        {
+          "Code": 5,
+          "Class": "Soil with vegetation stubble",
+          "Precision": 0.9279279279279279,
+          "Recall": 0.869198312236287,
+          "F1": 0.8976034858387799,
+          "Support": 237
+        },
+        {
+          "Code": 7,
+          "Class": "Very damp grey soil",
+          "Precision": 0.8684759916492694,
+          "Recall": 0.8851063829787233,
+          "F1": 0.8767123287671232,
+          "Support": 470
+        }
+      ],
+      "top_confusions": [
+        [
+          4,
+          7,
+          35
+        ],
+        [
+          7,
+          4,
+          34
+        ],
+        [
+          4,
+          3,
+          30
+        ]
+      ],
+      "fit_seconds": 0.003,
+      "predict_seconds_2000_rows": 0.134,
+      "artifact": {
+        "file": "knn.joblib",
+        "sha256": "20a0fa9d6e368bc3b4e5add4cc4631082139bb5c6a253181fac47dd4329fd3ff",
+        "bytes": 400819
+      }
+    },
+    "naive_bayes": {
+      "display_name": "Naive Bayes (Gaussian)",
+      "estimator": "GaussianNB",
+      "preprocessing": "None \u2014 Gaussian likelihoods are fitted per feature",
+      "rationale": "Gaussian class-conditional densities with a (strongly violated) feature-independence assumption.",
+      "selected_params": {
+        "var_smoothing": 0.001
+      },
+      "cv": {
+        "f1_macro_mean": 0.7762281518963202,
+        "f1_macro_std": 0.015848578817564348,
+        "accuracy_mean": 0.796392333709132,
+        "mcc_mean": 0.7524928990517609,
+        "train_f1_macro_mean": 0.7774741271214454,
+        "n_candidates": 10,
+        "search_seconds": 0.37
+      },
+      "train_accuracy": 0.798196166854566,
+      "test_metrics": {
+        "Accuracy": 0.7975,
+        "AUC": 0.9550255771583749,
+        "Precision": 0.7871544767758273,
+        "Recall": 0.7884419555105057,
+        "F1": 0.7841313640236028,
+        "MCC": 0.7542654590924769
+      },
+      "per_class_test": [
+        {
+          "Code": 1,
+          "Class": "Red soil",
+          "Precision": 0.8912037037037037,
+          "Recall": 0.8351409978308026,
+          "F1": 0.8622620380739082,
+          "Support": 461
+        },
+        {
+          "Code": 2,
+          "Class": "Cotton crop",
+          "Precision": 0.9803921568627451,
+          "Recall": 0.8928571428571429,
+          "F1": 0.9345794392523364,
+          "Support": 224
+        },
+        {
+          "Code": 3,
+          "Class": "Grey soil",
+          "Precision": 0.90625,
+          "Recall": 0.8765743073047859,
+          "F1": 0.8911651728553137,
+          "Support": 397
+        },
+        {
+          "Code": 4,
+          "Class": "Damp grey soil",
+          "Precision": 0.49473684210526314,
+          "Recall": 0.6682464454976303,
+          "F1": 0.5685483870967742,
+          "Support": 211
+        },
+        {
+          "Code": 5,
+          "Class": "Soil with vegetation stubble",
+          "Precision": 0.6094890510948905,
+          "Recall": 0.7046413502109705,
+          "F1": 0.6536203522504892,
+          "Support": 237
+        },
+        {
+          "Code": 7,
+          "Class": "Very damp grey soil",
+          "Precision": 0.8408551068883611,
+          "Recall": 0.7531914893617021,
+          "F1": 0.7946127946127947,
+          "Support": 470
+        }
+      ],
+      "top_confusions": [
+        [
+          7,
+          4,
+          92
+        ],
+        [
+          1,
+          5,
+          66
+        ],
+        [
+          4,
+          7,
+          43
+        ]
+      ],
+      "fit_seconds": 0.003,
+      "predict_seconds_2000_rows": 0.004,
+      "artifact": {
+        "file": "naive_bayes.joblib",
+        "sha256": "253d1bf0be0d56480ac9c174fdc407cfd4510f1e4d00526024d4a990ce6f4709",
+        "bytes": 4050
+      }
+    },
+    "svm": {
+      "display_name": "Support Vector Machine",
+      "estimator": "SVC + sigmoid calibration (CalibratedClassifierCV, ensemble=False)",
+      "preprocessing": "StandardScaler (kernel distances are scale-sensitive)",
+      "rationale": "Maximum-margin kernel classifier; sigmoid (Platt) calibration supplies the probabilities used for AUC.",
+      "selected_params": {
+        "C": 10.0,
+        "gamma": 0.1,
+        "kernel": "rbf"
+      },
+      "cv": {
+        "f1_macro_mean": 0.9017250352825578,
+        "f1_macro_std": 0.004024490769147225,
+        "accuracy_mean": 0.919729425028185,
+        "mcc_mean": 0.9008067849767807,
+        "train_f1_macro_mean": 0.9730064447413641,
+        "n_candidates": 14,
+        "search_seconds": 6.43
+      },
+      "train_accuracy": 0.9770011273957159,
+      "test_metrics": {
+        "Accuracy": 0.916,
+        "AUC": 0.9847856995536813,
+        "Precision": 0.9087983915235243,
+        "Recall": 0.8989162084185486,
+        "F1": 0.9025698880188134,
+        "MCC": 0.8969244145099887
+      },
+      "per_class_test": [
+        {
+          "Code": 1,
+          "Class": "Red soil",
+          "Precision": 0.9892241379310345,
+          "Recall": 0.9956616052060737,
+          "F1": 0.9924324324324324,
+          "Support": 461
+        },
+        {
+          "Code": 2,
+          "Class": "Cotton crop",
+          "Precision": 0.9646017699115044,
+          "Recall": 0.9732142857142857,
+          "F1": 0.9688888888888889,
+          "Support": 224
+        },
+        {
+          "Code": 3,
+          "Class": "Grey soil",
+          "Precision": 0.8815165876777251,
+          "Recall": 0.9370277078085643,
+          "F1": 0.9084249084249084,
+          "Support": 397
+        },
+        {
+          "Code": 4,
+          "Class": "Damp grey soil",
+          "Precision": 0.8045977011494253,
+          "Recall": 0.6635071090047393,
+          "F1": 0.7272727272727273,
+          "Support": 211
+        },
+        {
+          "Code": 5,
+          "Class": "Soil with vegetation stubble",
+          "Precision": 0.923728813559322,
+          "Recall": 0.919831223628692,
+          "F1": 0.9217758985200846,
+          "Support": 237
+        },
+        {
+          "Code": 7,
+          "Class": "Very damp grey soil",
+          "Precision": 0.8891213389121339,
+          "Recall": 0.9042553191489362,
+          "F1": 0.8966244725738397,
+          "Support": 470
+        }
+      ],
+      "top_confusions": [
+        [
+          4,
+          7,
+          34
+        ],
+        [
+          4,
+          3,
+          33
+        ],
+        [
+          7,
+          4,
+          18
+        ]
+      ],
+      "fit_seconds": 0.809,
+      "predict_seconds_2000_rows": 0.281,
+      "artifact": {
+        "file": "svm.joblib",
+        "sha256": "e5727d4a8304cd2a419a23357182e080d70d9411221f931ec3b3c6316fffc7bb",
+        "bytes": 188697
+      }
+    }
+  }
+}
