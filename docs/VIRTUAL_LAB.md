@@ -41,7 +41,10 @@ On a Jupyter-only lab, run each command in a notebook cell prefixed with `!`, an
 python train.py
 ```
 
-It takes about 30 seconds on a laptop; a shared lab VM may be slower. Use `python train.py --quick`
+It takes about 30 seconds on a laptop; a shared lab VM may be slower. With older library versions the
+numbers can differ slightly. For example, with Python 3.11 and scikit-learn 1.3.2, Logistic Regression
+gives accuracy 0.8365 instead of 0.8380 (the lbfgs solver changed between versions). The other four
+models and the winner are unchanged. Use `python train.py --quick`
 only if the full run is too slow, and say so in the submission. Optionally confirm the test suite:
 
 ```bash

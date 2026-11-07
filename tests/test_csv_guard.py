@@ -44,8 +44,9 @@ def test_missing_target_allowed_for_prediction_only(test_csv):
 def test_class_six_is_rejected(test_csv):
     bad = test_csv.head(10).copy()
     bad.loc[0, schema.TARGET] = 6
-    with pytest.raises(CSVValidationError, match="class 6"):
+    with pytest.raises(CSVValidationError, match="class 6") as err:
         validate(bad)
+    assert "Unknown class code(s) [6]." in str(err.value)  # plain ints, no numpy repr
 
 
 def test_non_numeric_feature_is_rejected(test_csv):

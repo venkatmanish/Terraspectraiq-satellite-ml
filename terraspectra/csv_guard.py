@@ -87,7 +87,7 @@ def validate(frame: pd.DataFrame, require_target: bool = False) -> ValidatedUplo
         if not np.all(np.equal(np.mod(target.to_numpy(dtype=float), 1), 0)):
             raise CSVValidationError(f"Target column '{schema.TARGET}' must contain integer class codes.")
         y = target.to_numpy().astype(int)
-        illegal = sorted(set(np.unique(y)) - set(schema.CLASS_LABELS))
+        illegal = sorted(int(v) for v in set(np.unique(y).tolist()) - set(schema.CLASS_LABELS))
         if illegal:
             raise CSVValidationError(
                 f"Unknown class code(s) {illegal}. Valid codes are {list(schema.CLASS_LABELS)} "
