@@ -55,6 +55,9 @@ CLASS_NAMES: dict[int, str] = {
     7: "Very damp grey soil",
 }
 CLASS_LABELS: tuple[int, ...] = tuple(sorted(CLASS_NAMES))
+CLASS_SHORT: dict[int, str] = {
+    1: "Red soil", 2: "Cotton", 3: "Grey soil", 4: "Damp grey", 5: "Veg. stubble", 7: "V. damp grey",
+}
 
 PIXEL_MIN, PIXEL_MAX = 0, 255  # 8-bit MSS digital numbers
 
