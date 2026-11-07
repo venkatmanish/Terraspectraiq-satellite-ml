@@ -169,7 +169,11 @@ pip install pytest && python -m pytest -q
 streamlit run app.py
 ```
 
-`train.py` is deterministic (`random_state = 146`) and prints the same comparison table as above.
+`train.py` uses `random_state = 146` throughout. Re-running it on the BITS Virtual Lab (Linux x86-64,
+Python 3.12.7, scikit-learn 1.9.1) reproduced the Decision Tree, KNN, Naive Bayes and SVM results above
+exactly. For Logistic Regression, C = 10 and C = 100 are almost tied in cross-validation (macro-F1
+0.81983 vs 0.81966), and small numerical differences between the two machines made the lab run pick
+C = 100, giving test accuracy 0.8385 instead of 0.8380. The winner is unchanged.
 `python train.py --quick` runs tiny grids for a fast smoke test.
 
 ## Limitations
