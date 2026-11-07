@@ -282,17 +282,32 @@ with tab_eval:
                     for a, p, n in worst:
                         st.markdown(f"- {schema.CLASS_NAMES[a]} → predicted **{schema.CLASS_NAMES[p]}**: {n} rows")
 
-            with st.expander("One-vs-rest ROC curves (from predicted probabilities)"):
-                curves = roc_curves(y_eval, scored.proba, scored.classes)
+            st.markdown("**One-vs-rest ROC curves** — how well each class's predicted probability separates it from all other classes")
+            curves = roc_curves(y_eval, scored.proba, scored.classes)
+            roc_left, roc_right = st.columns([1.7, 1])
+            with roc_left:
                 fig = go.Figure()
-                fig.add_trace(go.Scatter(x=[0, 1], y=[0, 1], mode="lines", line=dict(color=MUTED, dash="dot", width=1), name="Chance", hoverinfo="skip"))
+                fig.add_trace(go.Scatter(x=[0, 1], y=[0, 1], mode="lines", line=dict(color=MUTED, dash="dot", width=1), name="Chance (AUC 0.5)", hoverinfo="skip"))
                 for c, (fpr, tpr, auc) in curves.items():
                     fig.add_trace(go.Scatter(x=fpr, y=tpr, mode="lines", line=dict(color=CLASS_COLORS[c], width=2),
                                              name=f"{schema.CLASS_SHORT[c]} (AUC {auc:.3f})",
                                              hovertemplate="FPR %{x:.3f} · TPR %{y:.3f}<extra>" + schema.CLASS_SHORT[c] + "</extra>"))
                 fig.update_xaxes(title="False positive rate", range=[0, 1])
                 fig.update_yaxes(title="True positive rate", range=[0, 1.01])
-                st.plotly_chart(style_fig(fig, 420), width="stretch")
+                st.plotly_chart(style_fig(fig, 400), width="stretch")
+            with roc_right:
+                if curves:
+                    auc_table = pd.DataFrame(
+                        {"Class": [schema.class_label(c) for c in curves], "One-vs-rest AUC": [v[2] for v in curves.values()]}
+                    )
+                    st.dataframe(auc_table, hide_index=True, width="stretch",
+                                 column_config={"One-vs-rest AUC": st.column_config.NumberColumn(format="%.4f")})
+                    st.caption(
+                        f"The **AUC** tile above ({fmt(ev.metrics['AUC'])}) is the unweighted mean of these "
+                        f"{len(curves)} per-class values. Curves are computed from `predict_proba`, never from hard labels."
+                    )
+                else:
+                    st.caption("ROC curves need at least two classes in the uploaded labels.")
 
             st.divider()
             st.subheader("All five saved models on this file")
