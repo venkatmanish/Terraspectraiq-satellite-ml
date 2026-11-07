@@ -4,7 +4,7 @@ Five classical classifiers trained on Landsat satellite spectral neighbourhoods,
 evaluation metrics, and served through an interactive Streamlit evaluation app.
 
 - **GitHub repository:** https://github.com/venkatmanish/Terraspectraiq-satellite-ml
-- **Live Streamlit app:** _link added after deployment to Streamlit Community Cloud_
+- **Live Streamlit app:** https://terraspectraiq.streamlit.app/
 
 ---
 
